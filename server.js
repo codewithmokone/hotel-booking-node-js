@@ -3,6 +3,7 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const nodemailer = require('nodemailer')
 const admin = require('firebase-admin');
+require("dotenv").config()
 
 
 const app = express();
@@ -19,11 +20,56 @@ app.use(express.json());
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+// Create a Nodemailer transporter
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    type: 'OAuth2',
+    user: process.env.MAIL_USERNAME,
+    pass: process.env.MAIL_PASSWORD,
+    clientId: process.env.OAUTH_CLIENTID,
+    clientSecret: process.env.OAUTH_CLIENT_SECRET,
+    refreshToken: process.env.OAUTH_REFRESH_TOKEN
+  },
+});
 
 // Default home page
 app.get('/', (req, res) => {
   res.send('Welcome to the admin dashboard!');
 });
+
+app.post('/send-contactus-email', async (req, res) => {
+
+  // const errors = validationResult(req);
+
+  // if (!errors.isEmpty()) {
+  //   return res.status(400).json({ message: errors });
+  // }
+
+  try {
+
+    const { email, firstName, lastName, subject, message } = req.body;
+
+    console.log(email)
+
+    // Email content and configuration
+    const mailOptions = {
+      from: process.env.MAIL_USERNAME,
+      to: process.env.MAIL_USERNAME,
+      subject: subject,
+      text: `Hi, \nNames: ${firstName} ${lastName}. \nEmail: ${email} \nMessage: ${message}`,
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent: ', info.response);
+    res.status(200).json({ message: 'Email sent successfully!' });
+
+  } catch (error) {
+    console.error('Error sending email: ', error);
+    res.status(500).json({ error: 'Failed to send email' });
+  }
+});
+
 
 app.post('/payment', function (req, res) {
 
@@ -65,9 +111,7 @@ app.post('/payment', function (req, res) {
 </script>
 </html>
 `;
-
   res.send(htmlResponse);
-
 });
 
 
