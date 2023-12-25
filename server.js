@@ -12,7 +12,7 @@ const serviceAccount = require('./serviceAccountKey.json');
 
 admin.initializeApp({     // Initialize Firebase Admin SDK
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://edutech-app-eecfd-default-rtdb.firebaseio.com"
+  databaseURL: "hotel-booking-app-9ad18.firebaseapp.com"
 });
 
 
@@ -40,17 +40,9 @@ app.get('/', (req, res) => {
 
 app.post('/send-contactus-email', async (req, res) => {
 
-  // const errors = validationResult(req);
-
-  // if (!errors.isEmpty()) {
-  //   return res.status(400).json({ message: errors });
-  // }
-
   try {
 
     const { email, firstName, lastName, subject, message } = req.body;
-
-    console.log(email)
 
     // Email content and configuration
     const mailOptions = {
@@ -74,10 +66,11 @@ app.post('/send-contactus-email', async (req, res) => {
 app.post('/payment', function (req, res) {
 
   const formData = req.body;
+  const amount = req.body
 
   const passPhrase = process.env.PASSPHRASE;
 
-  const signature = generateAPISignature(passPhrase)
+  // const signature = generateAPISignature(passPhrase)
 
   // const payFastUrl = 'https://wwww.payfast.co.za/eng/process';
   const payFastUrl = 'https://sandbox.payfast.co.za/eng/process';
@@ -86,23 +79,15 @@ app.post('/payment', function (req, res) {
 <html>
 <body>
     <form action="${payFastUrl}" method="post">
-        ${Object.entries(formData).map(([key, value]) => `
-            <input name="${key}" type="hidden" value="${value.trim()}" />
-        `).join('')}
+         ${Object.entries(formData).map(([key, value]) => `
+             <input name="${key}" type="hidden" value="${value.trim()}" />
+         `).join('')}
           <input type="hidden" name="merchant_id" value="10031961" />
           <input type="hidden" name="merchant_key" value="m55oaux6bncnm" />
-          <input type="hidden" name="return_url" value="https://edutech-app-eecfd.web.app/" />
-          <input type="hidden" name="cancel_url" value="https://edutech-app-eecfd.web.app/" />
-          <input type="hidden" name="notify_url" value="https://ezamazwe-edutech-nodejs.onrender.com/notify_url" />
-          <input type="hidden" name="amount" value="100.00" />
-          <input type="hidden" name="subscription_type" value="1">
-          <input type="hidden" name="recurring_amount" value="100.00">
-          <input type="hidden" name="frequency" value="4">
-          <input type="hidden" name="cycles" value="4">
-          <input type="hidden" name="subscription_notify_email" value="true">
-          <input type="hidden" name="subscription_notify_webhook" value="true">
-          <input type="hidden" name="subscription_notify_buyer" value="true">
-          <input type="hidden" name="item_name" value="Ezamazwe Edutech Premium Courses" />
+          <input type="hidden" name="return_url" value="https://www.example.com/success">
+          <input type="hidden" name="cancel_url" value="https://www.example.com/cancel">
+          <input type="hidden" name="notify_url" value="https://www.example.com/notify">
+          <input type="hidden" name="item_name" value="Hotel Bookings" />
     </form>
 </body>
 <script>
@@ -142,5 +127,5 @@ app.post('/notify_url', async (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-  });
+  console.log(`Server is running on port ${port}`);
+});
