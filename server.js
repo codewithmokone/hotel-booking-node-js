@@ -1,13 +1,19 @@
-const express = require('express')
-const cors = require('cors')
-const bodyParser = require('body-parser')
-const nodemailer = require('nodemailer')
-const admin = require('firebase-admin');
-require("dotenv").config()
+const express = require('express');
 
+const cors = require('cors');
+
+const bodyParser = require('body-parser');
+
+const nodemailer = require('nodemailer');
+
+const admin = require('firebase-admin');
+
+require("dotenv").config();
 
 const app = express();
+
 const port = process.env.PORT || 4000;
+
 const serviceAccount = require('./serviceAccountKey.json');
 
 admin.initializeApp({     // Initialize Firebase Admin SDK
@@ -17,7 +23,9 @@ admin.initializeApp({     // Initialize Firebase Admin SDK
 
 
 app.use(express.json());
+
 app.use(cors());
+
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Create a Nodemailer transporter
@@ -38,6 +46,7 @@ app.get('/', (req, res) => {
   res.send('Welcome to the admin dashboard!');
 });
 
+// Sends an email to info desk.
 app.post('/send-contactus-email', async (req, res) => {
 
   try {
@@ -65,8 +74,7 @@ app.post('/send-contactus-email', async (req, res) => {
 
 app.post('/payment', function (req, res) {
 
-  const formData = req.body;
-  const amount = req.body
+  const form = req.body;
 
   const passPhrase = process.env.PASSPHRASE;
 
@@ -79,12 +87,12 @@ app.post('/payment', function (req, res) {
 <html>
 <body>
     <form action="${payFastUrl}" method="post">
-         ${Object.entries(formData).map(([key, value]) => `
-             <input name="${key}" type="hidden" value="${value.trim()}" />
+          <input type="hidden" name="merchant_id" value="10000100" />
+          <input type="hidden" name="merchant_key" value="46f0cd694581a" />
+          ${Object.entries(form).map(([key, value]) => `
+             <input type="hidden" name="${key}" type="hidden" value="${value.trim()}" />
          `).join('')}
-          <input type="hidden" name="merchant_id" value="10031961" />
-          <input type="hidden" name="merchant_key" value="m55oaux6bncnm" />
-          <input type="hidden" name="return_url" value="https://www.example.com/success">
+          <input type="hidden" name="return_url" value="https://dashing-khapse-b761ad.netlify.app/payment">
           <input type="hidden" name="cancel_url" value="https://www.example.com/cancel">
           <input type="hidden" name="notify_url" value="https://www.example.com/notify">
           <input type="hidden" name="item_name" value="Hotel Bookings" />
