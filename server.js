@@ -94,7 +94,7 @@ app.post('/payment', function (req, res) {
          `).join('')}
           <input type="hidden" name="return_url" value="https://hotel-booking-app-9ad18.web.app/payment">
           <input type="hidden" name="cancel_url" value="https://www.example.com/cancel">
-          <input type="hidden" name="notify_url" value="https://www.example.com/notify">
+          <input type="hidden" name="notify_url" value="https://hotel-booking-nodejs.onrender.com/notify_url">
           <input type="hidden" name="item_name" value="Hotel Bookings" />
     </form>
 </body>
@@ -113,6 +113,8 @@ app.post('/notify_url', async (req, res) => {
 
   try {
     const responseData = req.body;
+
+    console.log("Response data: ", responseData);
 
     const user = await admin.auth().getUserByEmail(responseData.email_address);
 
