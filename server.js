@@ -92,7 +92,7 @@ app.post('/payment', function (req, res) {
           ${Object.entries(form).map(([key, value]) => `
              <input type="hidden" name="${key}" type="hidden" value="${value.trim()}" />
          `).join('')}
-          <input type="hidden" name="return_url" value="https://dashing-khapse-b761ad.netlify.app/payment">
+          <input type="hidden" name="return_url" value="https://hotel-booking-app-9ad18.web.app/payment">
           <input type="hidden" name="cancel_url" value="https://www.example.com/cancel">
           <input type="hidden" name="notify_url" value="https://www.example.com/notify">
           <input type="hidden" name="item_name" value="Hotel Bookings" />
