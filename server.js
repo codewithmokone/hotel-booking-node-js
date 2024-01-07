@@ -21,6 +21,7 @@ admin.initializeApp({     // Initialize Firebase Admin SDK
   databaseURL: "hotel-booking-app-9ad18.firebaseapp.com"
 });
 
+const db = admin.firestore();
 
 app.use(express.json());
 
@@ -77,6 +78,8 @@ app.post('/payment', function (req, res) {
 
   const form = req.body;
 
+  console.log('Email :', form.email_address)
+
   const passPhrase = process.env.PASSPHRASE;
 
   // const signature = generateAPISignature(passPhrase)
@@ -115,19 +118,21 @@ app.post('/notify_url', async (req, res) => {
   try {
     const responseData = req.body;
 
-    console.log("Response data: ", responseData);
+    console.log("Response data: ", responseData.email_address);
 
     const user = await admin.auth().getUserByEmail(responseData.email_address);
 
-    // Checks if the payment is complete and updates the user profile.
-    if (responseData.payment_status === "COMPLETE") {
+    console.log("User: ", user);
 
-      const res = await db.collection('users').doc(user.uid).update({
-        "subscription": "subscribed",
-        "subscriptionStartDate": responseData.billing_date,
-        "subscriptionEndDate": endDateFormatted
-      });
-    }
+    // Checks if the payment is complete and updates the user profile.
+    // if (responseData.payment_status === "COMPLETE") {
+
+    //   const res = await db.collection('users').doc(user.uid).update({
+    //     "subscription": "subscribed",
+    //     "subscriptionStartDate": responseData.billing_date,
+    //     "subscriptionEndDate": endDateFormatted
+    //   });
+    // }
 
     // Respond with a success message
     res.status(200).send('Notification Received', responseData);
