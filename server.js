@@ -27,6 +27,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // Create a Nodemailer transporter
 const transporter = nodemailer.createTransport({
@@ -94,7 +95,7 @@ app.post('/payment', function (req, res) {
          `).join('')}
           <input type="hidden" name="return_url" value="https://hotel-booking-app-9ad18.web.app/payment">
           <input type="hidden" name="cancel_url" value="https://www.example.com/cancel">
-          <input type="hidden" name="notify_url" value="https://hotel-booking-app-9ad18.web.app/payment/notify">
+          <input type="hidden" name="notify_url" value="https://hotel-booking-app-9ad18.web.app/notify_url">
           <input type="hidden" name="item_name" value="Hotel Bookings" />
     </form>
 </body>
