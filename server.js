@@ -118,7 +118,7 @@ app.post('/notify_url', async (req, res) => {
   try {
     const responseData = req.body;
 
-    console.log("Response data: ", responseData);
+    console.log("Response data: ", responseData.email_address);
 
     const user = await admin.auth().getUserByEmail(responseData.email_address);
 
